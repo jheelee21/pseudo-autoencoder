@@ -4,16 +4,28 @@ class Sampler:
     def __init__(self) -> None:
         pass
 
-    def sample(self, image):
+    def sample(self, denoised_image, noise_estimate):
         pass
+
+class SimpleSampler(Sampler):
+    def __init__(self, threshold=20):
+        self.threshold = threshold
+    
+    def sample(self, denoised_image, noise_estimate):
+        h, w = denoised_image.shape
+        sampled_image = denoised_image.copy()
+        
+        outliers = np.where(noise_estimate > self.threshold)
+        sampled_image[outliers] = np.mean(denoised_image)
+        
+        return sampled_image.astype(np.uint8)
 
 class MCMCSampler(Sampler):
     def __init__(self, iterations=500, sigma=5):
-        super().__init__()
         self.iterations = iterations
         self.sigma = sigma
     
-    def sample(self, denoised_image):
+    def sample(self, denoised_image, noise_estimate):
         h, w = denoised_image.shape
         sampled_image = denoised_image.copy()
         
@@ -28,14 +40,13 @@ class MCMCSampler(Sampler):
 
 class ImportanceSampler(Sampler):
     def __init__(self, num_samples=1000):
-        super().__init__()
         self.num_samples = num_samples
     
-    def sample(self, denoised_image):
-        h, w = denoised_image.shape
-        sampled_image = np.zeros_like(denoised_image, dtype=np.float32)
+    def sample(self, latent_representation, noise_estimate):
+        h, w = latent_representation.shape
+        sampled_image = np.zeros_like(latent_representation, dtype=np.float32)
         
-        weights = np.exp(-denoised_image / 255.0)
+        weights = np.exp(-latent_representation / 255.0)
         weights /= np.sum(weights)
         
         for _ in range(self.num_samples):
