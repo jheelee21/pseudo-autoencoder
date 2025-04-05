@@ -33,12 +33,12 @@ class MeanEncoder(Encoder):
         return latent_representation.astype(np.uint8), outliers_mask
 
 class RANSACEncoder(Encoder):
-    def __init__(self, patch_size=8, min_sample_size=5, distance_threshold=10, max_iterations=50, degree=2):
+    def __init__(self, patch_size=8, threshold=10, degree=2, max_iterations=50, min_sample_size=5):
         self.patch_size = patch_size
-        self.min_sample_size = min_sample_size
-        self.distance_threshold = distance_threshold
-        self.max_iterations = max_iterations
+        self.threshold = threshold
         self.degree = degree  # Degree of the polynomial fit
+        self.max_iterations = max_iterations
+        self.min_sample_size = min_sample_size
     
     def encode(self, image):
         h, w = image.shape
@@ -57,7 +57,7 @@ class RANSACEncoder(Encoder):
                 noise_estimate[i:i+self.patch_size, j:j+self.patch_size] = residuals.reshape(self.patch_size, self.patch_size)
 
                 residuals_patch = residuals.reshape(self.patch_size, self.patch_size)
-                outlier_patch = (residuals_patch > self.distance_threshold).astype(np.uint8)
+                outlier_patch = (residuals_patch > self.threshold).astype(np.uint8)
                 outliers_mask[i:i+self.patch_size, j:j+self.patch_size] = outlier_patch
          
         return latent_representation.astype(np.uint8), outliers_mask
@@ -73,7 +73,7 @@ class RANSACEncoder(Encoder):
             sample_X, sample_y = X[sample_indices], y[sample_indices]
             model = np.polyfit(sample_X.flatten(), sample_y, self.degree)
             residuals = np.abs(y - np.polyval(model, X).flatten())
-            inliers = y[residuals < self.distance_threshold]
+            inliers = y[residuals < self.threshold]
             
             if len(inliers) > best_score:
                 best_model = model

@@ -23,10 +23,10 @@ class MeanSampler(Sampler):
         return sampled_image.astype(np.uint8)
 
 class MCMCSampler(Sampler):
-    def __init__(self, iterations=100, sigma=5, acceptance_threshold=20):
+    def __init__(self, iterations=100, sigma=5, threshold=20):
         self.iterations = iterations
         self.sigma = sigma
-        self.acceptance_threshold = acceptance_threshold
+        self.threshold = threshold
 
     def sample(self, image, outliers_mask):
         h, w = image.shape
@@ -38,7 +38,7 @@ class MCMCSampler(Sampler):
                 proposed_value = np.random.normal(current_value, self.sigma)
 
                 if (0 <= proposed_value <= 255 and 
-                    abs(proposed_value - current_value) < self.acceptance_threshold):
+                    abs(proposed_value - current_value) < self.threshold):
                     current_value = proposed_value
             sampled_image[x, y] = current_value
 
@@ -46,9 +46,9 @@ class MCMCSampler(Sampler):
 
 
 class ImportanceSampler(Sampler):
-    def __init__(self, iterations=10, k=4):
+    def __init__(self, iterations=10, patch_size=3):
         self.iterations = iterations
-        self.k = k
+        self.patch_size = patch_size
 
     def sample(self, image, outliers_mask):
         h, w = image.shape
@@ -56,9 +56,8 @@ class ImportanceSampler(Sampler):
 
         for _ in range(self.iterations):
             for x, y in zip(*np.where(outliers_mask == 1)): 
-                patch = sampled_image[max(x-self.k, 0):min(h, x+self.k+1),
-                                      max(y-self.k, 0):min(w, y+self.k+1)]
-
+                patch = sampled_image[max(x-self.patch_size, 0):min(h, x+self.patch_size+1),
+                                        max(y-self.patch_size, 0):min(w, y+self.patch_size+1)]
                 patch_weights = patch / np.sum(patch, dtype=np.float32)
                 patch_flat = patch.flatten()
                 patch_weights_flat = patch_weights.flatten()

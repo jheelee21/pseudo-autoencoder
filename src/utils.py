@@ -20,11 +20,11 @@ def show_image(image, colour = 'b/w'):
     plt.axis('off')
     plt.show()
 
-def plot_images(original, denoised, sampled):
+def plot_images(original, denoised, sampled, titles=['Original Image', 'Latent Representation', 'Sampled Image']):
     fig, axes = plt.subplots(1, 3, figsize=(12, 4))
-    axes[0].imshow(original, cmap='gray'); axes[0].set_title("Original Image")
-    axes[1].imshow(denoised, cmap='gray'); axes[1].set_title("Encoded Image")
-    axes[2].imshow(sampled, cmap='gray'); axes[2].set_title("Sampled Image")
+    axes[0].imshow(original, cmap='gray'); axes[0].set_title(titles[0])
+    axes[1].imshow(denoised, cmap='gray'); axes[1].set_title(titles[1])
+    axes[2].imshow(sampled, cmap='gray'); axes[2].set_title(titles[2])
     plt.show()
 
 def add_noise(image, noise_level=25):
