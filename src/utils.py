@@ -32,7 +32,7 @@ def add_noise(image, noise_level=25):
     noisy_image = np.clip(image + noise, 0, 255)
     return noisy_image.astype(np.uint8)
 
-def pseudo_autoencoder(noisy_image, encoder, sampler):
-    latent_representation, noise_estimate = encoder.encode(noisy_image)
-    sampled_image = sampler.sample(latent_representation, noise_estimate)
+def pseudo_autoencoder(image, encoder, sampler):
+    latent_representation, outliner_mask = encoder.encode(image)
+    sampled_image = sampler.sample(latent_representation, outliner_mask)
     return latent_representation, sampled_image
