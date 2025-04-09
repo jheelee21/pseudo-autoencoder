@@ -2,9 +2,9 @@
 
 <img src="img/example2.png" width="300">
 
-Images, especially photographs, are very susceptible to noise. Noise in images can be caused by countless unpredictable factors, such as lighting conditions, sensor limitations, or transmission errors.
+Images, especially photographs, are very susceptible to noise. Noises can be caused by countless factors, such as lighting conditions, sensor limitations, or transmission errors.
 
-Machine learning techniques, particularly autoencoders, have become one of the most popular methods for image denoising. In this project, I aim to develop a pseudo-autoencoder using statistical methods we have learned to tackle image noise.
+Machine learning techniques have become one of the most popular methods for image denoising. Autoencoder is one of the most popular neural network architectures for image denoising. In this project, I aim to develop a pseudo-autoencoder using statistical methods we have learned to tackle image noise.
 
 ## Autoencoder
 
@@ -18,7 +18,7 @@ Typically, the original data to be compressed by the encoder consists of feature
 
 ## Pseudo-Autoencoder
 
-Neural networks can be computationally expensive for both training and inference, especially for large datasets. They also require a lot of hyperparameter tuning, can be sensitive to the choice of architecture, and require a lot of data to train. 
+Neural networks can be computationally expensive for both training and inference especially with large datasets. They also require a lot of hyperparameter tuning, can be sensitive to the choice of architecture, and require a lot of data to train. 
 
 In this project, I aim to use statistical methods to create a pseudo-autoencoder that can achieve similar results without the need for a neural network or machine learning.
 
